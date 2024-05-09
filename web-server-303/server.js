@@ -94,21 +94,17 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (requestPath === `/${LOG_FILE}`) {
-  try {
-    await readFile(LOG_FILE);
-    res.writeHead(403, { 'Content-Type': 'text/plain' })
-    res.end('Error 403: Forbidden', 'utf8')
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      res.writeHead(404, { 'Content-Type': 'text/plain' })
-      res.end('Error 404: Not Found', 'utf8')
-    } else {
-      console.error(`Error reading ${LOG_FILE}: ${error}`)
-      res.writeHead(500, { 'Content-Type': 'text/plain' })
-      res.end('Error 500: Internal Server Error', 'utf8')
+    try {
+      await readFile(LOG_FILE);
+      res.writeHead(403, { 'Content-Type': 'text/plain' })
+      res.end('Error 403: Forbidden', 'utf8')
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        res.writeHead(404, { 'Content-Type': 'text/plain' })
+        res.end('Error 404: Not Found', 'utf8')
+      }
     }
-  }
-  return;
+    return;
 }
   if (requestPath === '/favicon.ico') {
     try {
@@ -130,8 +126,6 @@ const server = http.createServer(async (req, res) => {
       }
     }
   }
-
-  console.log(`Request for ${requestPath}`)
 
   try {
     const filePath = '.' + requestPath
